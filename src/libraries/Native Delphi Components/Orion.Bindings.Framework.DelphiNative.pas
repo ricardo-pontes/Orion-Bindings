@@ -23,7 +23,7 @@ type
     class function New : iOrionBindingFramework;
 
     function BindToView(aView : TComponent; aObject : TObject) : iOrionBindingFramework;
-    function BindToEntity : iOrionBindingFramework;
+    function BindToEntity(aView : TComponent; aObject : TObject) : iOrionBindingFramework;
   end;
 implementation
 
@@ -41,7 +41,7 @@ uses
 
 { TOrionBindingFrameworkDelphiNative }
 
-function TOrionBindingFrameworkDelphiNative.BindToEntity: iOrionBindingFramework;
+function TOrionBindingFrameworkDelphiNative.BindToEntity(aView : TComponent; aObject : TObject) : iOrionBindingFramework;
 begin
 
 end;
