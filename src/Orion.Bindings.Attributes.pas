@@ -27,6 +27,18 @@ type
     property Format: string read FFormat write FFormat;
   end;
 
+  OrionBindingComboBox = class(TCustomAttribute)
+  private
+    FEntityPropertyDisplayName: string;
+    FEntityPropertyKeyName: string;
+
+  public
+    constructor Create(aEntityPropertyDisplayName, aEntityPropertyKeyName : string);
+
+    property EntityPropertyDisplayName: string read FEntityPropertyDisplayName write FEntityPropertyDisplayName;
+    property EntityPropertyKeyName: string read FEntityPropertyKeyName write FEntityPropertyKeyName;
+  end;
+
 implementation
 
 { TOrionBindingComponentEdits }
@@ -38,6 +50,14 @@ begin
   FPrefix             := aPrefix;
   FSufix              := aSufix;
   FFormat             := aFormat;
+end;
+
+{ OrionBindingComboBox }
+
+constructor OrionBindingComboBox.Create(aEntityPropertyDisplayName, aEntityPropertyKeyName: string);
+begin
+  FEntityPropertyDisplayName := aEntityPropertyDisplayName;
+  FEntityPropertyKeyName     := aEntityPropertyKeyName;
 end;
 
 end.
