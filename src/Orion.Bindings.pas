@@ -36,8 +36,12 @@ begin
 end;
 
 function TOrionBinding.BindToEntity: iOrionBinding;
+var
+  lFramework: iOrionBindingFramework;
 begin
   Result := Self;
+  for lFramework in FFrameworkList do
+    lFramework.BindToEntity(FView, FEntity);
 end;
 
 function TOrionBinding.BindToView: iOrionBinding;

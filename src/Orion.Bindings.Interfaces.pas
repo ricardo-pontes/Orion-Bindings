@@ -20,7 +20,7 @@ type
   iOrionBindingFramework = interface
     ['{01002A37-FF51-4F8A-B146-39E05FD53EAC}']
     function BindToView(aView : TComponent; aObject : TObject) : iOrionBindingFramework;
-    function BindToEntity : iOrionBindingFramework;
+    function BindToEntity(aView : TComponent; aObject : TObject) : iOrionBindingFramework;
   end;
 
 implementation
