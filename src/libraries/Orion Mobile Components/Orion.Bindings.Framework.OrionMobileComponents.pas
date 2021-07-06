@@ -11,7 +11,7 @@ uses
 type
   TOrionBindingsFrameworkOrionMobileComponents = class(TInterfacedObject, iOrionBindingFramework)
   private
-    function GetValue(aPropRtti: TRttiProperty; aAttribute: OrionBindingComponent; aEntity : TObject): Variant;
+    function GetValue(aPropRtti: TRttiProperty; aEntity : TObject; aPrefix, aSufix : string): Variant;
   public
     constructor Create;
     destructor Destroy; override;
@@ -111,6 +111,7 @@ var
   lField: TRttiField;
   lAttrib: TCustomAttribute;
   lComponent : TComponent;
+  lPrefix, lSufix : string;
 begin
   Result := Self;
   if not Assigned(aView) then
@@ -133,41 +134,32 @@ begin
       for lAttrib in lField.GetAttributes do
       begin
         if lAttrib is OrionBindingComponent then
-        begin
-          lTypObject := lContextObject.GetType(aObject.ClassInfo);
-          for lProp in lTypObject.GetProperties do
-          begin
-            if lProp.Name = OrionBindingComponent(lAttrib).EntityPropertyName then
-            begin
-              lComponent := TComponent(aView).FindComponent(lField.Name);
-                if lComponent is TComponentsEditsDefaultWithImageAndLabel then
-                  TComponentsEditsDefaultWithImageAndLabel(lComponent).Text(GetValue(lProp, OrionBindingComponent(lAttrib), aObject))
-                else if lComponent is TComponentsEditsEmail then
-                  TComponentsEditsEmail(lComponent).Text(GetValue(lProp, OrionBindingComponent(lAttrib), aObject))
-                else if lComponent is TComponentsEditsImagesEdit then
-                  TComponentsEditsImagesEdit(lComponent).Text(GetValue(lProp, OrionBindingComponent(lAttrib), aObject))
-                else if lComponent is TComponentsEditsLoginEdit then
-                  TComponentsEditsLoginEdit(lComponent).Text(GetValue(lProp, OrionBindingComponent(lAttrib), aObject))
-                else if lComponent is TComponentsEditsPesquisa then
-                  TComponentsEditsPesquisa(lComponent).Text(GetValue(lProp, OrionBindingComponent(lAttrib), aObject))
-                else if lComponent is TComponentsComboBoxesDefault then
-                  TComponentsComboBoxesDefault(lComponent).Index(GetValue(lProp, OrionBindingComponent(lAttrib), aObject));
+          lTypObject := lContextObject.GetType(aObject.ClassInfo)
+        else if lAttrib is Prefix then
+          lPrefix := Prefix(lAttrib).Value
+        else if lAttrib is Sufix then
+          lSufix := Sufix(lAttrib).Value;
+      end;
 
-              Break;
-            end;
-          end;
-        end
-        else if lAttrib is OrionBindingComboBox then
+      for lProp in lTypObject.GetProperties do
+      begin
+        if lProp.Name = OrionBindingComponent(lAttrib).EntityPropertyName then
         begin
-          lTypObject := lContextObject.GetType(aObject.ClassInfo);
-          for lProp in lTypObject.GetProperties do
-          begin
-            if lProp.Name = OrionBindingComboBox(lAttrib).EntityPropertyKeyName then
-            begin
-              lComponent := TComponent(aView).FindComponent(lField.Name);
+          lComponent := TComponent(aView).FindComponent(lField.Name);
+            if lComponent is TComponentsEditsDefaultWithImageAndLabel then
+              TComponentsEditsDefaultWithImageAndLabel(lComponent).Text(GetValue(lProp, aObject, lPrefix, lSufix))
+            else if lComponent is TComponentsEditsEmail then
+              TComponentsEditsEmail(lComponent).Text(GetValue(lProp, aObject, lPrefix, lSufix))
+            else if lComponent is TComponentsEditsImagesEdit then
+              TComponentsEditsImagesEdit(lComponent).Text(GetValue(lProp, aObject, lPrefix, lSufix))
+            else if lComponent is TComponentsEditsLoginEdit then
+              TComponentsEditsLoginEdit(lComponent).Text(GetValue(lProp, aObject, lPrefix, lSufix))
+            else if lComponent is TComponentsEditsPesquisa then
+              TComponentsEditsPesquisa(lComponent).Text(GetValue(lProp, aObject, lPrefix, lSufix))
+            else if lComponent is TComponentsComboBoxesDefault then
+              TComponentsComboBoxesDefault(lComponent).Index(GetValue(lProp, aObject, lPrefix, lSufix));
 
-            end;
-          end;
+          Break;
         end;
       end;
     end;
@@ -188,25 +180,24 @@ begin
   inherited;
 end;
 
-function TOrionBindingsFrameworkOrionMobileComponents.GetValue(aPropRtti: TRttiProperty;
-  aAttribute: OrionBindingComponent; aEntity : TObject): Variant;
+function TOrionBindingsFrameworkOrionMobileComponents.GetValue(aPropRtti: TRttiProperty; aEntity : TObject; aPrefix, aSufix : string): Variant;
 var
   lResult : string;
   lValue : string;
 begin
   lResult := '';
-  if aAttribute.Prefix.Trim <> '' then
-    lResult := aAttribute.Prefix;
+  if aPrefix.Trim <> '' then
+    lResult := aPrefix;
 
-  if aAttribute.Format.Trim <> '' then
-    lValue := FormatCurr(aAttribute.Format, StrToCurr(aPropRtti.GetValue(Pointer(aEntity)).AsVariant))
-  else
+//  if aAttribute.Format.Trim <> '' then
+//    lValue := FormatCurr(aAttribute.Format, StrToCurr(aPropRtti.GetValue(Pointer(aEntity)).AsVariant))
+//  else
     lValue := aPropRtti.GetValue(Pointer(aEntity)).AsVariant;
 
   lResult := lResult + lValue;
 
-  if aAttribute.Sufix.Trim <> '' then
-    lResult := lResult + aAttribute.Sufix;
+  if aSufix.Trim <> '' then
+    lResult := lResult + aSufix;
 
   Result := lResult;
 end;

@@ -2,6 +2,8 @@ unit Orion.Bindings.Attributes;
 
 interface
 
+uses
+  System.Rtti;
 const
   EmptyEntityName = '';
   EmptyEntityPropertyname = '';
@@ -12,19 +14,35 @@ const
 type
   OrionBindingComponent = class(TCustomAttribute)
   private
-    FEntityName : string;
     FEntityPropertyName: string;
-    FPrefix : string;
-    FSufix : string;
-    FFormat: string;
   public
-    constructor Create(aEntityName, aEntityPropertyName, aPrefix, aSufix, aFormat : string);
-
+    constructor Create(aEntityPropertyName : string);
     property EntityPropertyName: string read FEntityPropertyName write FEntityPropertyName;
-    property EntityName: string read FEntityName write FEntityName;
-    property Prefix: string read FPrefix write FPrefix;
-    property Sufix: string read FSufix write FSufix;
-    property Format: string read FFormat write FFormat;
+  end;
+
+  OrionBindsChangeProperty = class(TCustomAttribute)
+  private
+    FProperty: string;
+    FValue: TValue;
+  public
+    constructor Create(aProperty : string; aValue : TValue);
+    property Prop: string read FProperty write FProperty;
+    property Value: TValue read FValue write FValue;
+  end;
+
+  OrionBindAssertProperty = class(TCustomAttribute)
+  private
+    FCondition: string;
+    FTrueValue: TValue;
+    FFalseValue: TValue;
+    FPropertyName: string;
+  public
+    constructor Create(aCondition, aPropertyName: string; aTrueValue, aFalseValue: TValue);
+
+    property Condition    : string read FCondition    write FCondition;
+    property PropertyName : string read FPropertyName write FPropertyName;
+    property TrueValue    : TValue read FTrueValue    write FTrueValue;
+    property FalseValue   : TValue read FFalseValue   write FFalseValue;
   end;
 
   OrionBindingComboBox = class(TCustomAttribute)
@@ -39,17 +57,29 @@ type
     property EntityPropertyKeyName: string read FEntityPropertyKeyName write FEntityPropertyKeyName;
   end;
 
+  Prefix = class(TCustomAttribute)
+  private
+    FValue: string;
+  public
+    constructor Create(aValue : string);
+    property Value: string read FValue write FValue;
+  end;
+
+  Sufix = class(TCustomAttribute)
+  private
+    FValue: string;
+  public
+    constructor Create(aValue : string);
+    property Value: string read FValue write FValue;
+  end;
+
 implementation
 
 { TOrionBindingComponentEdits }
 
-constructor OrionBindingComponent.Create(aEntityName, aEntityPropertyName, aPrefix, aSufix, aFormat : string);
+constructor OrionBindingComponent.Create(aEntityPropertyName : string);
 begin
-  FEntityName         := aEntityName;
   FEntityPropertyName := aEntityPropertyName;
-  FPrefix             := aPrefix;
-  FSufix              := aSufix;
-  FFormat             := aFormat;
 end;
 
 { OrionBindingComboBox }
@@ -58,6 +88,38 @@ constructor OrionBindingComboBox.Create(aEntityPropertyDisplayName, aEntityPrope
 begin
   FEntityPropertyDisplayName := aEntityPropertyDisplayName;
   FEntityPropertyKeyName     := aEntityPropertyKeyName;
+end;
+
+{ Sufix }
+
+constructor Sufix.Create(aValue: string);
+begin
+  FValue := aValue;
+end;
+
+{ Prefix }
+
+constructor Prefix.Create(aValue: string);
+begin
+ FValue := aValue;
+end;
+
+{ OrionBindsChangeProperty }
+
+constructor OrionBindsChangeProperty.Create(aProperty: string; aValue: TValue);
+begin
+  FProperty := aProperty;
+  FValue    := aValue;
+end;
+
+{ OrionBindAssertProperty }
+
+constructor OrionBindAssertProperty.Create(aCondition, aPropertyName: string; aTrueValue, aFalseValue: TValue);
+begin
+  FCondition    := aCondition;
+  FPropertyName := aPropertyName;
+  FTrueValue    := aTrueValue;
+  FFalseValue   := aFalseValue;
 end;
 
 end.

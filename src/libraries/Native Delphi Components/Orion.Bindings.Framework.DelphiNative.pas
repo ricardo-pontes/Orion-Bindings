@@ -16,7 +16,7 @@ type
   private
     FView : TComponent;
     FEntity : TObject;
-    function GetValue(aPropRtti : TRttiProperty; aAttribute : OrionBindingComponent) : Variant;
+    function GetValue(aPropRtti: TRttiProperty; aEntity : TObject; aPrefix, aSufix : string): Variant;
   public
     constructor Create;
     destructor Destroy; override;
@@ -29,6 +29,7 @@ implementation
 
 uses
   System.SysUtils,
+  System.StrUtils,
   System.TypInfo
   {$IFDEF VCL}
    Vcl.Edit,
@@ -48,12 +49,17 @@ end;
 
 function TOrionBindingFrameworkDelphiNative.BindToView(aView : TComponent; aObject : TObject) : iOrionBindingFramework;
 var
-  lContext, lContextObject : TRttiContext;
-  lTyp, lTypObject : TRttiType;
+  lContext, lContextObject, lContextComponent : TRttiContext;
+  lTyp, lTypObject, lTypComponent : TRttiType;
   lProp : TRttiProperty;
   lField: TRttiField;
   lAttrib: TCustomAttribute;
   lComponent : TComponent;
+  lPrefix, lSufix : string;
+  lChangePropertyProp : string;
+  lChangePropertyValue : TValue;
+  lPropComponent: TRttiProperty;
+  lAssert : boolean;
 begin
   Result := Self;
   if not Assigned(aView) then
@@ -72,34 +78,67 @@ begin
 
     for lField in lTyp.GetFields do
     begin
+      if lComponent is TFrame then
+        BindToView(lComponent, aObject);
+
+      lAssert := False;
       for lAttrib in lField.GetAttributes do
       begin
         if lAttrib is OrionBindingComponent then
+          lTypObject := lContextObject.GetType(aObject.ClassInfo)
+        else if lAttrib is Prefix then
+          lPrefix := Prefix(lAttrib).Value
+        else if lAttrib is Sufix then
+          lSufix := Sufix(lAttrib).Value
+        else if lAttrib is OrionBindsChangeProperty then
         begin
-          lTypObject := lContextObject.GetType(aObject.ClassInfo);
-          for lProp in lTypObject.GetProperties do
-          begin
-            if lProp.Name = OrionBindingComponent(lAttrib).EntityPropertyName then
-            begin
-              lComponent := TComponent(aView).FindComponent(lField.Name);
-              {$IFDEF VCL}
-                if lComponent is TCustomEdit then
-                  TCustomEdit(lComponent).Text := GetValue(lProp, OrionBindingComponent(lAttrib))
-                else if lComponent is TLabel then
-                  TLabel(lComponent).Caption := GetValue(lProp, OrionBindingComponent(lAttrib));
-              {$ELSE}
-                if lComponent is TCustomEdit then
-                  TCustomEdit(lComponent).Text := GetValue(lProp, OrionBindingComponent(lAttrib))
-                else if lComponent is TLabel then
-                  TLabel(lComponent).Text := GetValue(lProp, OrionBindingComponent(lAttrib))
-                else if lComponent is TText then
-                  TText(lComponent).Text := GetValue(lProp, OrionBindingComponent(lAttrib));
-              {$ENDIF}
-
-              Break;
-            end;
-          end;
+          lTypComponent  := lContextComponent.GetType(lField.ClassInfo);
+          lPropComponent := lTypComponent.GetProperty(OrionBindsChangeProperty(lAttrib).Prop);
+          lPropComponent.SetValue(lField.ClassInfo, OrionBindsChangeProperty(lAttrib).Value);
         end
+        else if lAttrib is OrionBindAssertProperty then
+        begin
+          lAssert := true;
+        end;
+      end;
+
+      for lProp in lTypObject.GetProperties do
+      begin
+        if lProp.Name = OrionBindingComponent(lAttrib).EntityPropertyName then
+        begin
+          lComponent := TComponent(aView).FindComponent(lField.Name);
+          {$IFDEF VCL}
+            if lComponent is TCustomEdit then
+              TCustomEdit(lComponent).Text := GetValue(lProp, aObject, lPrefix, lSufix)
+            else if lComponent is TLabel then
+              TLabel(lComponent).Caption := GetValue(lProp, aObject, lPrefix, lSufix);
+          {$ELSE}
+            if lComponent is TCustomEdit then
+              TCustomEdit(lComponent).Text := GetValue(lProp, aObject, lPrefix, lSufix)
+            else if lComponent is TLabel then
+              TLabel(lComponent).Text := GetValue(lProp, aObject, lPrefix, lSufix)
+            else if lComponent is TText then
+              TText(lComponent).Text := GetValue(lProp, aObject, lPrefix, lSufix);
+          {$ENDIF}
+
+          Break;
+        end;
+      end;
+
+      if lAssert then
+      begin
+        lTypComponent  := lContextComponent.GetType(lField.ClassInfo);
+        lPropComponent := lTypComponent.GetProperty(OrionBindAssertProperty(lAttrib).PropertyName);
+        if OrionBindAssertProperty(lAttrib).Condition.Contains('=') then
+        begin
+          if lProp.PropertyType.TypeKind = tkString then
+          begin
+            if lPropComponent.GetValue(Pointer(lField.ClassInfo)).AsString = SplitString(OrionBindAssertProperty(lAttrib).Condition, '=')[1] then
+              lPropComponent.SetValue(Pointer(lField.ClassInfo), OrionBindAssertProperty(lAttrib).TrueValue)
+            else
+              lPropComponent.SetValue(Pointer(lField.ClassInfo), OrionBindAssertProperty(lAttrib).FalseValue)
+          end;
+        end;
       end;
     end;
   finally
@@ -124,24 +163,24 @@ begin
   Result := Self.Create;
 end;
 
-function TOrionBindingFrameworkDelphiNative.GetValue(aPropRtti : TRttiProperty; aAttribute : OrionBindingComponent) : Variant;
+function TOrionBindingFrameworkDelphiNative.GetValue(aPropRtti: TRttiProperty; aEntity : TObject; aPrefix, aSufix : string): Variant;
 var
   lResult : string;
   lValue : string;
 begin
   lResult := '';
-  if aAttribute.Prefix.Trim <> '' then
-    lResult := aAttribute.Prefix;
+  if aPrefix.Trim <> '' then
+    lResult := aPrefix;
 
-  if aAttribute.Format.Trim <> '' then
-    lValue := FormatCurr(aAttribute.Format, StrToCurr(aPropRtti.GetValue(Pointer(FEntity)).AsVariant))
-  else
-    lValue := aPropRtti.GetValue(Pointer(FEntity)).AsVariant;
+//  if aAttribute.Format.Trim <> '' then
+//    lValue := FormatCurr(aAttribute.Format, StrToCurr(aPropRtti.GetValue(Pointer(aEntity)).AsVariant))
+//  else
+    lValue := aPropRtti.GetValue(Pointer(aEntity)).AsVariant;
 
   lResult := lResult + lValue;
 
-  if aAttribute.Sufix.Trim <> '' then
-    lResult := lResult + aAttribute.Sufix;
+  if aSufix.Trim <> '' then
+    lResult := lResult + aSufix;
 
   Result := lResult;
 end;
