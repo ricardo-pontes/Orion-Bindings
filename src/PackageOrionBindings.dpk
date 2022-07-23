@@ -1,0 +1,44 @@
+package PackageOrionBindings;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS ON}
+{$RANGECHECKS ON}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  fmx;
+
+contains
+  Orion.Bindings.Interfaces in 'Orion.Bindings.Interfaces.pas',
+  Orion.Bindings.Data in 'Orion.Bindings.Data.pas',
+  Orion.Bindings.Container in 'Orion.Bindings.Container.pas',
+  Orion.Bindings.Middlewares in 'Orion.Bindings.Middlewares.pas',
+  Orion.Bindings.Core in 'Orion.Bindings.Core.pas',
+  Orion.Bindings in 'Orion.Bindings.pas',
+  Orion.Bindings.Types in 'Orion.Bindings.Types.pas',
+  Orion.Bindings.Middlewares.FMX.Native in 'Orion.Bindings.Middlewares.FMX.Native.pas';
+
+end.
