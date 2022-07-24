@@ -35,10 +35,13 @@ contains
   Orion.Bindings.Interfaces in 'Orion.Bindings.Interfaces.pas',
   Orion.Bindings.Data in 'Orion.Bindings.Data.pas',
   Orion.Bindings.Container in 'Orion.Bindings.Container.pas',
-  Orion.Bindings.Middlewares in 'Orion.Bindings.Middlewares.pas',
+  Orion.Bindings.Frameworks in 'Orion.Bindings.Frameworks.pas',
   Orion.Bindings.Core in 'Orion.Bindings.Core.pas',
   Orion.Bindings in 'Orion.Bindings.pas',
   Orion.Bindings.Types in 'Orion.Bindings.Types.pas',
-  Orion.Bindings.Middlewares.FMX.Native in 'Orion.Bindings.Middlewares.FMX.Native.pas';
+  Orion.Bindings.Framework.FMX.Native in 'Orion.Bindings.Framework.FMX.Native.pas',
+  Orion.Bindings.Rtti in 'Orion.Bindings.Rtti.pas',
+  Orion.Bindings.Middleware.CPF in 'Orion.Bindings.Middleware.CPF.pas',
+  Orion.Bindings.Middleware in 'Orion.Bindings.Middleware.pas';
 
 end.

@@ -3,6 +3,7 @@ unit Orion.Bindings.Types;
 interface
 
 uses
+  Orion.Bindings.Middleware,
   System.SysUtils;
 
 type
@@ -17,6 +18,8 @@ type
     ObjectPropertyName : string;
     ObjectPropertyNameIn : string;
     ObjectPropertyNameOut : string;
+    RemoveSimbolsIn : boolean;
+    Middlewares : array of OrionBindingsMiddleware;
   end;
 
   OrionBindingsException = class(Exception)

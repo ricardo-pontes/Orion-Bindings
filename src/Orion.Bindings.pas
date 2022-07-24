@@ -7,15 +7,16 @@ uses
   Orion.Bindings.Interfaces,
   Orion.Bindings.Container,
   Orion.Bindings.Data,
-  Orion.Bindings.Middlewares,
-  Orion.Bindings.Core;
+  Orion.Bindings.Frameworks,
+  Orion.Bindings.Core,
+  Orion.Bindings.Middleware;
 
 type
   TOrionBindings = class(TInterfacedObject, iOrionBindings)
   private
     FContainer : TOrionBindingsContainer;
     FData : TOrionBindingsData;
-    FMiddlewares : TOrionBindingsMiddlewares;
+    FFrameworks : TOrionBindingsFrameworks;
     FCore : TOrionBindingsCore;
   public
     constructor Create;
@@ -24,9 +25,11 @@ type
 
     function AddBind(aComponentName : string; aObjectPropertyName : string) : iOrionBindings; overload;
     function AddBind(aComponentName : string; aObjectPropertyNameIn, aObjectPropertyNameOut : string) : iOrionBindings; overload;
+    function AddBind(aComponentName : string; aObjectPropertyName : string; aMiddlewares : array of OrionBindingsMiddleware) : iOrionBindings; overload;
+    function AddBind(aComponentName : string; aObjectPropertyNameIn, aObjectPropertyNameOut : string; aRemoveSimbolsIn : boolean) : iOrionBindings; overload;
     function View(aView : TComponent) : iOrionBindings;
     function Entity(aEntity : TObject) : iOrionBindings;
-    function Use(aMiddleware : iOrionMiddleware) : iOrionBindings;
+    function Use(aLibrary : iOrionLibraryFramework) : iOrionBindings;
     function BindToEntity : iOrionBindings;
     function BindToView : iOrionBindings;
   end;
@@ -47,10 +50,24 @@ begin
   FData.AddBind(aComponentName, aObjectPropertyName);
 end;
 
-function TOrionBindings.Use(aMiddleware: iOrionMiddleware): iOrionBindings;
+function TOrionBindings.Use(aLibrary: iOrionLibraryFramework): iOrionBindings;
 begin
   Result := Self;
-  FMiddlewares.AddMiddleware(aMiddleware);
+  FFrameworks.AddFramework(aLibrary);
+end;
+
+function TOrionBindings.AddBind(aComponentName, aObjectPropertyNameIn, aObjectPropertyNameOut: string;
+  aRemoveSimbolsIn: boolean): iOrionBindings;
+begin
+  Result := Self;
+  FData.AddBind(aComponentName, aObjectPropertyNameIn, aObjectPropertyNameOut, aRemoveSimbolsIn);
+end;
+
+function TOrionBindings.AddBind(aComponentName, aObjectPropertyName: string;
+  aMiddlewares: array of OrionBindingsMiddleware): iOrionBindings;
+begin
+  Result := Self;
+  FData.AddBind(aComponentName, aObjectPropertyName, aMiddlewares);
 end;
 
 function TOrionBindings.BindToEntity: iOrionBindings;
@@ -69,15 +86,15 @@ constructor TOrionBindings.Create;
 begin
   FContainer   := TOrionBindingsContainer.Create;
   FData        := TOrionBindingsData.Create;
-  FMiddlewares := TOrionBindingsMiddlewares.Create;
-  FCore        := TOrionBindingsCore.Create(FContainer, FData, FMiddlewares);
+  FFrameworks := TOrionBindingsFrameworks.Create;
+  FCore        := TOrionBindingsCore.Create(FContainer, FData, FFrameworks);
 end;
 
 destructor TOrionBindings.Destroy;
 begin
   FContainer.DisposeOf;
   FData.DisposeOf;
-  FMiddlewares.DisposeOf;
+  FFrameworks.DisposeOf;
   FCore.DisposeOf;
   inherited;
 end;
@@ -96,7 +113,7 @@ end;
 function TOrionBindings.View(aView: TComponent): iOrionBindings;
 begin
   Result := Self;
-  FCore.BindToView;
+  FContainer.View(aView);
 end;
 
 end.
