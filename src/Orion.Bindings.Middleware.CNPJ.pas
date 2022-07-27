@@ -1,4 +1,4 @@
-unit Orion.Bindings.Middleware.CPF;
+unit Orion.Bindings.Middleware.CNPJ;
 
 interface
 
@@ -8,11 +8,11 @@ uses
   System.MaskUtils,
   Orion.Bindings.Middleware;
 
-procedure CPF(var aValue : TValue; aState : OrionBindingsMiddlewareState);
+procedure CNPJ(var aValue : TValue; aState : OrionBindingsMiddlewareState);
 
 implementation
 
-procedure CPF(var aValue : TValue; aState : OrionBindingsMiddlewareState);
+procedure CNPJ(var aValue : TValue; aState : OrionBindingsMiddlewareState);
 var
   lIndex : integer;
   lValue : string;
@@ -32,8 +32,8 @@ begin
     lValue := StringReplace(lValue, '.', '', [rfReplaceAll]);
     lValue := StringReplace(lValue, '-', '', [rfReplaceAll]);
     lValue := StringReplace(lValue, '/', '', [rfReplaceAll]);
-    if lValue.Length = 11 then
-      aValue := FormatMaskText('000\.000\.000\-00;0;',lValue);
+    if lValue.Length = 14 then
+      aValue := FormatMaskText('99.999.999/9999-99;0', lValue);
   end;
 end;
 

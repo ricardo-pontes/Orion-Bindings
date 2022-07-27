@@ -10,6 +10,7 @@ uses
 
 type
   iOrionLibraryFramework = interface;
+  iOrionBindingsList = interface;
 
   iOrionBindings = interface
     function Use(aLibrary : iOrionLibraryFramework) : iOrionBindings;
@@ -21,8 +22,17 @@ type
 //    function AddBind(aComponentName : string; aObjectPropertyNameIn, aObjectPropertyNameOut : string; aRemoveSimbolsIn : boolean) : iOrionBindings; overload;
     function BindToEntity : iOrionBindings;
     function BindToView : iOrionBindings;
+    function ListBinds : iOrionBindingsList;
   end;
 
+  iOrionBindingsList = interface
+    procedure Init;
+    procedure ComponentName(aValue : string);
+    procedure ObjectListPropertyName(aValue : string);
+    procedure AddListBind(aComponentName, aObjectPropertyName : string); overload;
+    procedure AddListBind(aComponentName, aObjectPropertyName : string; aMiddlewares : array of OrionBindingsMiddleware); overload;
+    procedure Finish;
+  end;
 
   iOrionLibraryFramework = interface
     procedure Synchronize(aCommand : TOrionMiddlewareCommand; aComponent : TComponent; var aValue : TValue);

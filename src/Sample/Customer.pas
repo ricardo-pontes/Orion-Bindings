@@ -2,8 +2,12 @@ unit Customer;
 
 interface
 
+uses
+  System.Generics.Collections;
+
 type
   TDocument = class;
+  TContact = class;
 
   TCustomer = class
   private
@@ -13,6 +17,7 @@ type
     FSalary: Extended;
     FBirthDate: TDateTime;
     FDocument: TDocument;
+    FContacts: TObjectList<TContact>;
   public
     constructor Create;
     destructor Destroy; override;
@@ -23,6 +28,7 @@ type
     property Salary: Extended read FSalary write FSalary;
     property BirthDate: TDateTime read FBirthDate write FBirthDate;
     property Document: TDocument read FDocument write FDocument;
+    property Contacts: TObjectList<TContact> read FContacts write FContacts;
   end;
 
   TDocument = class
@@ -30,6 +36,16 @@ type
     FNumber: string;
   public
     property Number: string read FNumber write FNumber;
+  end;
+
+  TContact = class
+  private
+    FDescription: string;
+    FID: integer;
+
+  public
+    property ID: integer read FID write FID;
+    property Description: string read FDescription write FDescription;
   end;
 
 implementation
@@ -43,11 +59,13 @@ uses
 constructor TCustomer.Create;
 begin
   FDocument := TDocument.Create;
+  FContacts := TObjectList<TContact>.Create;
 end;
 
 destructor TCustomer.Destroy;
 begin
   FDocument.DisposeOf;
+  FContacts.DisposeOf;
   inherited;
 end;
 

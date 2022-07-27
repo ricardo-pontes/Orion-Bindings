@@ -117,6 +117,8 @@
         <DCCReference Include="Orion.Bindings.Rtti.pas"/>
         <DCCReference Include="Orion.Bindings.Middleware.CPF.pas"/>
         <DCCReference Include="Orion.Bindings.Middleware.pas"/>
+        <DCCReference Include="Orion.Bindings.Middleware.FormatCurrency.pas"/>
+        <DCCReference Include="Orion.Bindings.Middleware.CNPJ.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

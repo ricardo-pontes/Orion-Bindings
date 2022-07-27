@@ -27,7 +27,10 @@ uses
   Orion.Bindings.Interfaces,
   Orion.Bindings,
   Orion.Bindings.Framework.FMX.Native,
-  Orion.Bindings.Middleware.CPF;
+  Orion.Bindings.Middleware.CPF,
+  Orion.Bindings.Middleware.CNPJ,
+  Orion.Bindings.Middleware.FormatCurrency, FMX.EditBox, FMX.NumberBox, FMX.ListView.Types, FMX.ListView.Appearances,
+  FMX.ListView.Adapters.Base, FMX.ListView;
 
 type
   TForm1 = class(TForm)
@@ -39,7 +42,9 @@ type
     Button1: TButton;
     Memo1: TMemo;
     Button2: TButton;
-    Label1: TLabel;
+    ListView1: TListView;
+    GroupBox1: TGroupBox;
+    EditCPFCNPJ: TEdit;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -77,14 +82,26 @@ begin
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
+var
+  lContact : TContact;
 begin
   FCustomer := TCustomer.Create;
   FCustomer.ID := 1;
   FCustomer.Name := 'Ricardo';
   FCustomer.LastName := 'Pontes da Cunha';
-  FCustomer.Salary := 5000;
+  FCustomer.Salary := 5000.57;
   FCustomer.BirthDate := StrToDate('24/06/1987');
   FCustomer.Document.Number := '11111111111';
+
+  lContact := TContact.Create;
+  lContact.ID := 1;
+  lContact.Description := 'Test';
+  FCustomer.Contacts.Add(lContact);
+
+  lContact := TContact.Create;
+  lContact.ID := 2;
+  lContact.Description := 'Test 2';
+  FCustomer.Contacts.Add(lContact);
 
   FBinds := TOrionBindings.New;
   FBinds.Use(TOrionBindingsMiddlewaresFMXNative.New);
@@ -93,9 +110,16 @@ begin
   FBinds.AddBind('EditID', 'ID');
   FBinds.AddBind('EditName', 'Name');
   FBinds.AddBind('EditLastName', 'LastName');
-  FBinds.AddBind('EditSalary', 'Salary');
+  FBinds.AddBind('EditSalary', 'Salary', [FormatCurrency]);
   FBinds.AddBind('EditBirthDate', 'BirthDate');
-  FBinds.AddBind('Label1', 'Document.Number', [MiddlewareCPF]);
+  FBinds.AddBind('EditCPFCNPJ', 'Document.Number', [CPF, CNPJ]);
+
+//  FBinds.ListBinds.Init;
+//  FBinds.ListBinds.ComponentName('ListView1');
+//  FBinds.ListBinds.ObjectListPropertyName('Contacts');
+//  FBinds.ListBinds.AddListBind('ID', 'ID');
+//  FBinds.ListBinds.AddListBind('Description', 'Description');
+//  FBinds.ListBinds.Finish;
 end;
 
 procedure TForm1.FormDestroy(Sender: TObject);
