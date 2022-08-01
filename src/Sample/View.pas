@@ -164,7 +164,7 @@ end;
 procedure TForm1.ConfigOrionBindings;
 begin
   FBinds := TOrionBindings.New;
-  FBinds.Use(TOrionBindingsMiddlewaresFMXNative.New);
+  FBinds.Use(TOrionBindingsVisualFrameworkFMXNative.New);
   FBinds.View(Self);
   FBinds.Entity(FCustomer);
   FBinds.AddBind('EditID', 'ID');
