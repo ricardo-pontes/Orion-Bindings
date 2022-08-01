@@ -29,6 +29,7 @@ type
     FComponentName : string;
     FObjectListPropertyName : string;
     FPrimaryKeyName : string;
+    FClassType : TClass;
   public
     constructor Create;
     destructor Destroy; override;
@@ -40,6 +41,8 @@ type
     function PrimaryKeyName : string; overload;
     procedure ObjectListName(aValue : string); overload;
     function ObjectListName : string; overload;
+    procedure ClassType(aValue : TClass); overload;
+    function ClassType : TClass; overload;
     procedure AddBind(aComponentName, aObjectPropertyName : string; aMiddlewares : array of OrionBindingsMiddleware);
     function Binds : TList<TOrionBind>;
   end;
@@ -174,6 +177,16 @@ end;
 function TOrionBindingsDataListBind.Binds: TList<TOrionBind>;
 begin
   Result := FListBinds;
+end;
+
+function TOrionBindingsDataListBind.ClassType: TClass;
+begin
+  Result := FClassType;
+end;
+
+procedure TOrionBindingsDataListBind.ClassType(aValue: TClass);
+begin
+  FClassType := aValue;
 end;
 
 function TOrionBindingsDataListBind.ComponentName: string;

@@ -30,6 +30,11 @@ type
     Value : TValue;
   end;
 
+  TOrionBindKeyPropertySynk = record
+    Key : Variant;
+    isSynked : boolean;
+  end;
+
   OrionBindingsException = class(Exception)
 
   end;

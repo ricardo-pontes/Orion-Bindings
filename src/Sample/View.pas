@@ -8,6 +8,9 @@ uses
   System.UITypes,
   System.Classes,
   System.Variants,
+  System.JSON,
+  System.JSON.Writers,
+  Rest.Json,
 
   FMX.Types,
   FMX.Controls,
@@ -16,21 +19,26 @@ uses
   FMX.Dialogs,
   FMX.Controls.Presentation,
   FMX.Edit,
-  Customer,
   FMX.StdCtrls,
   FMX.Memo.Types,
   FMX.ScrollBox,
   FMX.Memo,
-  Rest.Json,
-  System.JSON,
-  System.JSON.Writers,
+  FMX.EditBox,
+  FMX.NumberBox,
+  FMX.ListView.Types,
+  FMX.ListView.Appearances,
+  FMX.ListView.Adapters.Base,
+  FMX.ListView,
+  FMX.Layouts,
+
+  Customer,
   Orion.Bindings.Interfaces,
   Orion.Bindings,
-  Orion.Bindings.Framework.FMX.Native,
+  Orion.Bindings.VisualFrameworks.FMX.Native,
   Orion.Bindings.Middleware.CPF,
   Orion.Bindings.Middleware.CNPJ,
-  Orion.Bindings.Middleware.FormatCurrency, FMX.EditBox, FMX.NumberBox, FMX.ListView.Types, FMX.ListView.Appearances,
-  FMX.ListView.Adapters.Base, FMX.ListView;
+  Orion.Bindings.Middleware.FormatCurrency,
+  Orion.Bindings.Middleware.ZeroIfEmptyStr;
 
 type
   TForm1 = class(TForm)
@@ -45,13 +53,23 @@ type
     ListView1: TListView;
     GroupBox1: TGroupBox;
     EditCPFCNPJ: TEdit;
+    Layout1: TLayout;
+    EditContactID: TEdit;
+    EditContactDescription: TEdit;
+    Button3: TButton;
+    Layout2: TLayout;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+    procedure ListView1ItemClickEx(const Sender: TObject; ItemIndex: Integer; const LocalClickPos: TPointF;
+      const ItemObject: TListItemDrawable);
   private
     FCustomer : TCustomer;
     FBinds : iOrionBindings;
+    procedure CreateCustomer;
+    procedure ConfigOrionBindings;
   public
     { Public declarations }
   end;
@@ -69,6 +87,8 @@ begin
 end;
 
 procedure TForm1.Button2Click(Sender: TObject);
+var
+  lContact: TContact;
 begin
   FBinds.BindToEntity;
 
@@ -78,12 +98,49 @@ begin
   Memo1.Lines.AddPair('Salary', FCustomer.Salary.ToString);
   Memo1.Lines.AddPair('Birthdate', DateToStr(FCustomer.BirthDate));
   Memo1.Lines.AddPair('Document.Number', FCustomer.Document.Number);
+  Memo1.Lines.Add('');
+  Memo1.Lines.Add('Contacts');
+  for lContact in FCustomer.Contacts do begin
+    Memo1.Lines.Add(Format('ID=%d | Description=%s', [lContact.ID, lContact.Description]));
+  end;
   Memo1.Lines.Add('--------------------------------');
+
+end;
+
+procedure TForm1.Button3Click(Sender: TObject);
+var
+  lListItem : TListViewItem;
+begin
+  lListItem := ListView1.Items.Add;
+  TListItemText(lListItem.Objects.FindDrawable('ID')).Text := EditContactID.Text;
+  TListItemText(lListItem.Objects.FindDrawable('Description')).Text := EditContactDescription.Text;
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
+begin
+  CreateCustomer;
+  ConfigOrionBindings;
+end;
+
+procedure TForm1.FormDestroy(Sender: TObject);
+begin
+  FCustomer.DisposeOf;
+end;
+
+procedure TForm1.ListView1ItemClickEx(const Sender: TObject; ItemIndex: Integer; const LocalClickPos: TPointF;
+  const ItemObject: TListItemDrawable);
+begin
+  if not Assigned(ItemObject) then
+    Exit;
+  if ItemObject.Name = 'Delete' then begin
+    TListView(Sender).Items.Delete(iTemIndex);
+  end;
+
+end;
+
+procedure TForm1.CreateCustomer;
 var
-  lContact : TContact;
+  lContact: TContact;
 begin
   FCustomer := TCustomer.Create;
   FCustomer.ID := 1;
@@ -102,7 +159,10 @@ begin
   lContact.ID := 2;
   lContact.Description := 'Test 2';
   FCustomer.Contacts.Add(lContact);
+end;
 
+procedure TForm1.ConfigOrionBindings;
+begin
   FBinds := TOrionBindings.New;
   FBinds.Use(TOrionBindingsMiddlewaresFMXNative.New);
   FBinds.View(Self);
@@ -114,17 +174,14 @@ begin
   FBinds.AddBind('EditBirthDate', 'BirthDate');
   FBinds.AddBind('EditCPFCNPJ', 'Document.Number', [CPF, CNPJ]);
 
-//  FBinds.ListBinds.Init;
-//  FBinds.ListBinds.ComponentName('ListView1');
-//  FBinds.ListBinds.ObjectListPropertyName('Contacts');
-//  FBinds.ListBinds.AddListBind('ID', 'ID');
-//  FBinds.ListBinds.AddListBind('Description', 'Description');
-//  FBinds.ListBinds.Finish;
-end;
-
-procedure TForm1.FormDestroy(Sender: TObject);
-begin
-  FCustomer.DisposeOf;
+  FBinds.ListBinds.Init;
+  FBinds.ListBinds.ComponentName('ListView1');
+  FBinds.ListBinds.ObjectListPropertyName('Contacts');
+  FBinds.ListBinds.ClassType(TContact);
+  FBinds.ListBinds.Primarykey('ID');
+  FBinds.ListBinds.AddListBind('ID', 'ID');
+  FBinds.ListBinds.AddListBind('Description', 'Description');
+  FBinds.ListBinds.Finish;
 end;
 
 end.
