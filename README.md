@@ -1,7 +1,7 @@
 # Orion-Bindings
 
 Framework para realização de Bind via escrita de comandos.
-O OrionBindings tem o objetivo de realizar a sincronização de dados dos seus objetos para os componentes visuais da sua aplicação e vice-versa.<br>
+O OrionBindings tem o objetivo de realizar a sincronização de dados através de cada property dos seus objetos para os componentes visuais da sua aplicação e vice-versa.<br>
 
 <b>Extensível:</b> Projetado para ser extensível, conta também com a possibilidade de criar integração com qualquer biblioteca de componentes visuais que você preferir.<br>
 
@@ -33,7 +33,7 @@ FBinds := TOrionBindings.New;
 O OrionBindings foi projetado para ser extensível, o que significa que podemos criar integrações para qualquer biblioteca de componentes visuais que desejarmos.
 Atualmente temos integração com alguns componentes visuais da FMX, basta acessar https://github.com/ricardo-pontes/Orion-Bindings-VisualFramework-FMX-Native;
 
-Para fazer com que o framework faça a integração com a biblioteca, basta adicionar ao uses do projeto e passar uma instância para o framework. 
+Para que o framework faça a integração com a biblioteca, basta adicionar ao uses do projeto uma biblioteca e passar uma instância para o framework. 
 Podemos incluir quantas integrações quisermos, bastando apenas executar o comando Use. Ex:
 
 ```
@@ -68,7 +68,7 @@ FBinds.BindToEntity;
 
 ## Bind em objetos que contem coleções de objetos
 
-Se o Objeto conter uma coleção de objetos, o framework conta também com binds em coleções do tipo TObjectList, bastando executar os seguintes comandos;
+Se o Objeto conter uma ou mais coleções de objetos, o framework conta também com binds em coleções do tipo TObjectList, bastando executar os seguintes comandos;
 ```
 FBinds.ListBinds.Init;
 FBinds.ListBinds.ComponentName('ListView1');
