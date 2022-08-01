@@ -80,7 +80,7 @@ FBinds.ListBinds.AddListBind('Description', 'Description');
 FBinds.ListBinds.Finish;
 ```
 No Exemplo acima, no Objeto Customer existe uma property chamada "Contacts" que é um TObjectList<TContact>;
-Todos os parâmetros são obrigatórios para a execução dos binds e você não precisa se preocupar com o estado da começão de objetos, o próprio framework se encarregará do sincronismo entre o formulário de dados e a coleção, ficando responsável pelas alterações, inserções e exclusões.
+Todos os parâmetros são obrigatórios para a execução dos binds e você não precisa se preocupar com o estado dos objetos, o próprio framework se encarregará do sincronismo entre o formulário de dados e a coleção, ficando responsável pelas alterações, inserções e exclusões.
 
 ## Middlewares nos Binds
 
