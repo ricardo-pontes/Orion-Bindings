@@ -3,9 +3,9 @@
 Framework para realização de Bind via escrita de comandos.
 O OrionBindings tem o objetivo de realizar a sincronização de dados dos seus objetos para os componentes visuais da sua aplicação e vice-versa.<br>
 
-Projetado para ser extensível, conta também com a possibilidade de criar integração com qualquer biblioteca de componentes visuais que você preferir.<br>
+<b>Extensível:</b> Projetado para ser extensível, conta também com a possibilidade de criar integração com qualquer biblioteca de componentes visuais que você preferir.<br>
 
-Conceito de middlewares: Você mesmo pode escrever seu middleware e integra-lo ao framework de forma simples e rápida.
+<b>Conceito de middlewares</b>: Você mesmo pode escrever seu middleware e integra-lo ao framework de forma simples e rápida.
 
 ## Instalação
 
@@ -93,7 +93,7 @@ Apenas dar uses dos middlewares no formulário e passar em um array no bind dese
 FBinds.AddBind('EditSalary', 'Salary', [FormatCurrency]);
 FBinds.AddBind('EditCPFCNPJ', 'Document.Number', [CPF, CNPJ]);
 ```
-No exemplo acima, foram passados 2 middlewares que serão responsáveis por fazer a formatação da informação no componente visual, tendo este efeito:
+No exemplo acima, foram passados 3 middlewares que serão responsáveis por fazer a formatação da informação no componente visual, tendo este efeito:
 
 ![Middleware 1](https://github.com/ricardo-pontes/Orion-Bindings/blob/main/assets/Sem%20t%C3%ADtulo.png)
 
