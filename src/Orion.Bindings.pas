@@ -4,19 +4,25 @@ interface
 
 uses
   System.Classes,
+  System.Generics.Collections,
   Orion.Bindings.Interfaces,
   Orion.Bindings.Container,
   Orion.Bindings.Data,
-  Orion.Bindings.Frameworks,
+  Orion.Bindings.VisualFrameworks,
   Orion.Bindings.Core,
   Orion.Bindings.Middleware;
 
+const
+  FRAMEWORK_VERSION = '1.0.0';
+
 type
-  TOrionBindings = class(TInterfacedObject, iOrionBindings)
+  TOrionBindings = class(TInterfacedObject, iOrionBindings, iOrionBindingsList)
   private
     FContainer : TOrionBindingsContainer;
     FData : TOrionBindingsData;
-    FFrameworks : TOrionBindingsFrameworks;
+    FDataListBinds : TOrionBindingsDataListBinds;
+    FDataListBind : TOrionBindingsDataListBind;
+    FFrameworks : TOrionBindingsVisualFrameworks;
     FCore : TOrionBindingsCore;
   public
     constructor Create;
@@ -29,9 +35,20 @@ type
     function AddBind(aComponentName : string; aObjectPropertyNameIn, aObjectPropertyNameOut : string; aRemoveSimbolsIn : boolean) : iOrionBindings; overload;
     function View(aView : TComponent) : iOrionBindings;
     function Entity(aEntity : TObject) : iOrionBindings;
-    function Use(aLibrary : iOrionLibraryFramework) : iOrionBindings;
+    function Use(aLibrary : iOrionVisualFramework) : iOrionBindings;
     function BindToEntity : iOrionBindings;
     function BindToView : iOrionBindings;
+    function ListBinds : iOrionBindingsList;
+
+    procedure Init;
+    procedure ComponentName(aValue : string);
+    procedure ObjectListPropertyName(aValue : string);
+    procedure Primarykey(aName : string);
+    procedure ClassType(aClassType : TClass);
+    procedure AddListBind(aComponentName, aObjectPropertyName : string); overload;
+    procedure AddListBind(aComponentName, aObjectPropertyName : string; aMiddlewares : array of OrionBindingsMiddleware); overload;
+    procedure Finish;
+    function Version : string;
   end;
 
 implementation
@@ -50,7 +67,7 @@ begin
   FData.AddBind(aComponentName, aObjectPropertyName);
 end;
 
-function TOrionBindings.Use(aLibrary: iOrionLibraryFramework): iOrionBindings;
+function TOrionBindings.Use(aLibrary: iOrionVisualFramework): iOrionBindings;
 begin
   Result := Self;
   FFrameworks.AddFramework(aLibrary);
@@ -61,6 +78,11 @@ function TOrionBindings.AddBind(aComponentName, aObjectPropertyNameIn, aObjectPr
 begin
   Result := Self;
   FData.AddBind(aComponentName, aObjectPropertyNameIn, aObjectPropertyNameOut, aRemoveSimbolsIn);
+end;
+
+procedure TOrionBindings.AddListBind(aComponentName, aObjectPropertyName: string);
+begin
+  FDataListBind.AddBind(aComponentName, aObjectPropertyName, []);
 end;
 
 function TOrionBindings.AddBind(aComponentName, aObjectPropertyName: string;
@@ -82,12 +104,23 @@ begin
   FCore.BindToView;
 end;
 
+procedure TOrionBindings.ClassType(aClassType: TClass);
+begin
+  FDataListBind.ClassType(aClassType);
+end;
+
+procedure TOrionBindings.ComponentName(aValue: string);
+begin
+  FDataListBind.ComponentName(aValue);
+end;
+
 constructor TOrionBindings.Create;
 begin
-  FContainer   := TOrionBindingsContainer.Create;
-  FData        := TOrionBindingsData.Create;
-  FFrameworks := TOrionBindingsFrameworks.Create;
-  FCore        := TOrionBindingsCore.Create(FContainer, FData, FFrameworks);
+  FContainer     := TOrionBindingsContainer.Create;
+  FData          := TOrionBindingsData.Create;
+  FDataListBinds := TOrionBindingsDataListBinds.Create;
+  FFrameworks    := TOrionBindingsVisualFrameworks.Create;
+  FCore          := TOrionBindingsCore.Create(FContainer, FData, FFrameworks, FDataListBinds);
 end;
 
 destructor TOrionBindings.Destroy;
@@ -96,6 +129,7 @@ begin
   FData.DisposeOf;
   FFrameworks.DisposeOf;
   FCore.DisposeOf;
+  FDataListBinds.DisposeOf;
   inherited;
 end;
 
@@ -104,16 +138,52 @@ begin
   Result := Self.Create;
 end;
 
+procedure TOrionBindings.ObjectListPropertyName(aValue: string);
+begin
+  FDataListBind.ObjectListName(aValue);
+end;
+
 function TOrionBindings.Entity(aEntity : TObject) : iOrionBindings;
 begin
   Result := Self;
   FContainer.Entity(aEntity);
 end;
 
+procedure TOrionBindings.Finish;
+begin
+  FDataListBinds.AddDataListBind(FDataListBind);
+end;
+
+procedure TOrionBindings.Init;
+begin
+  FDataListBind := TOrionBindingsDataListBind.Create;
+end;
+
+function TOrionBindings.ListBinds: iOrionBindingsList;
+begin
+  Result := Self;
+end;
+
+function TOrionBindings.Version: string;
+begin
+  Result := FRAMEWORK_VERSION;
+end;
+
 function TOrionBindings.View(aView: TComponent): iOrionBindings;
 begin
   Result := Self;
   FContainer.View(aView);
+end;
+
+procedure TOrionBindings.AddListBind(aComponentName, aObjectPropertyName: string;
+  aMiddlewares: array of OrionBindingsMiddleware);
+begin
+  FDataListBind.AddBind(aComponentName, aObjectPropertyName, aMiddlewares);
+end;
+
+procedure TOrionBindings.Primarykey(aName: string);
+begin
+  FDataListBind.PrimaryKeyName(aName);
 end;
 
 end.

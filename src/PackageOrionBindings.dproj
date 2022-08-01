@@ -109,13 +109,11 @@
         <DCCReference Include="Orion.Bindings.Interfaces.pas"/>
         <DCCReference Include="Orion.Bindings.Data.pas"/>
         <DCCReference Include="Orion.Bindings.Container.pas"/>
-        <DCCReference Include="Orion.Bindings.Frameworks.pas"/>
+        <DCCReference Include="Orion.Bindings.VisualFrameworks.pas"/>
         <DCCReference Include="Orion.Bindings.Core.pas"/>
         <DCCReference Include="Orion.Bindings.pas"/>
         <DCCReference Include="Orion.Bindings.Types.pas"/>
-        <DCCReference Include="Orion.Bindings.Framework.FMX.Native.pas"/>
         <DCCReference Include="Orion.Bindings.Rtti.pas"/>
-        <DCCReference Include="Orion.Bindings.Middleware.CPF.pas"/>
         <DCCReference Include="Orion.Bindings.Middleware.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>

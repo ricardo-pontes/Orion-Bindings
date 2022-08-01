@@ -6,6 +6,8 @@ uses
   System.Rtti,
   System.SysUtils,
   System.StrUtils,
+  System.TypInfo,
+  System.Generics.Collections,
   Orion.Bindings.Types,
   Orion.Bindings.Container;
 
@@ -17,7 +19,11 @@ type
 
 procedure SetValueToProperty(aProperty: TRttiProperty; aValue: TValue; aEntity : TObject);
 
+function EnumAsString(aEnum : TTypeKind) : string;
+
 function GetEntityPropertyByName(aEntityPropertyName: string; aEntity : TObject): ResultEntityPropertyByName;
+
+function GetEntityListPropertyByName(aEntityPropertyName: string; aEntity : TObjectList<TObject>; aValue : TValue): ResultEntityPropertyByName;
 
 implementation
 
@@ -69,6 +75,11 @@ begin
   end;
 end;
 
+function EnumAsString(aEnum : TTypeKind) : string;
+begin
+  Result := GetEnumName(TypeInfo(TTypeKind), integer(tkUnknown));
+end;
+
 function GetEntityPropertyByName(aEntityPropertyName: string; aEntity : TObject): ResultEntityPropertyByName;
 var
   lContext : TRttiContext;
@@ -112,6 +123,21 @@ begin
   finally
     if not IsCompound then
       lType.DisposeOf;
+  end;
+end;
+
+function GetEntityListPropertyByName(aEntityPropertyName: string; aEntity : TObjectList<TObject>; aValue : TValue): ResultEntityPropertyByName;
+var
+  lObject: TObject;
+begin
+  for lObject in aEntity do
+  begin
+    Result := GetEntityPropertyByName(aEntityPropertyName, lObject);
+    if Assigned(Result.&Property) then
+      Continue;
+
+    if Result.&Property.GetValue(Pointer(lObject)).AsVariant = aValue.AsVariant then
+      Exit;
   end;
 end;
 
