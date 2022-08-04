@@ -76,6 +76,9 @@ begin
   lSynkedEntityList := nil;
   try
     for lListBind in FDataListBinds.Binds do begin
+      if lListBind.IsSeparatedOfEntityBindList then
+        Continue;
+
       if Assigned(lSynkedEntityList) then
         lSynkedEntityList.DisposeOf;
 
@@ -130,16 +133,23 @@ var
   lIndex : integer;
 begin
   ValidateListBindsData;
-  lIndex := 0;
   for lListBind in FDataListBinds.Binds do begin
-    lResultObjectList := GetEntityPropertyByName(lListBind.ObjectListName, FContainer.Entity);
+    lObjectList := nil;
+    lIndex := 0;
+    if lListBind.IsSeparatedOfEntityBindList then
+      lObjectList := TObjectList<TObject>(lListBind.ObjectList)
+    else
+      lResultObjectList := GetEntityPropertyByName(lListBind.ObjectListName, FContainer.Entity);
+
     lComponent := FContainer.View.FindComponent(lListBind.ComponentName);
 
-    if not lResultObjectList.Entity.ClassName.Contains('List<') then
-      Exit;
+    if not Assigned(lObjectList) then
+      if not lResultObjectList.Entity.ClassName.Contains('List<') then
+        Exit;
 
     Synchronize(TOrionMiddlewareCommand.BindToViewListBindClear, lComponent, lValue);
-    lObjectList := TObjectList<TObject>(lResultObjectList.Entity);
+    if not Assigned(lObjectList) then
+      lObjectList := TObjectList<TObject>(lResultObjectList.Entity);
     for lObject in lObjectList do begin
       Synchronize(TOrionMiddlewareCommand.BindToViewListBindAddRow, lComponent, lValue);
       for lBind in lListBind.Binds do begin
@@ -187,8 +197,12 @@ var
 begin
   for lListBind in FDataListBinds.Binds do begin
     CheckIfComponentNameExist(lListBind.ComponentName);
-    CheckIfObjectPropertyNameExist(lListBind.ObjectListName);
-    lListBind.Validate;
+    if lListBind.IsSeparatedOfEntityBindList then
+      lListBind.Validate(TDataListBindType.SeparatedOfEntity)
+    else begin
+      CheckIfObjectPropertyNameExist(lListBind.ObjectListName);
+      lListBind.Validate;
+    end;
   end;
 end;
 

@@ -1,0 +1,91 @@
+object ViewSeparatedBindList: TViewSeparatedBindList
+  Left = 0
+  Top = 0
+  Caption = 'Form2'
+  ClientHeight = 480
+  ClientWidth = 640
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  DesignerMasterStyle = 0
+  object Button1: TButton
+    Position.X = 8.000000000000000000
+    Position.Y = 8.000000000000000000
+    TabOrder = 0
+    Text = 'BindToView'
+    OnClick = Button1Click
+  end
+  object ListView1: TListView
+    ItemAppearanceClassName = 'TDynamicAppearance'
+    ItemEditAppearanceClassName = 'TDynamicAppearance'
+    HeaderAppearanceClassName = 'TCustomizeItemObjects'
+    FooterAppearanceClassName = 'TCustomizeItemObjects'
+    AlternatingColors = True
+    Align = Client
+    Margins.Top = 50.000000000000000000
+    Size.Width = 640.000000000000000000
+    Size.Height = 430.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 10
+    ItemAppearance.ItemHeight = 35
+    ItemAppearance.HeaderHeight = 1
+    ItemAppearance.FooterHeight = 1
+    ItemAppearanceObjects.ItemObjects.ObjectsCollection = <
+      item
+        AppearanceObjectName = 'ID'
+        AppearanceClassName = 'TTextObjectAppearance'
+        Appearance.Width = 63.000000000000000000
+        Appearance.Height = 44.000000000000000000
+      end
+      item
+        AppearanceObjectName = 'Description'
+        AppearanceClassName = 'TTextObjectAppearance'
+        Appearance.TextAlign = Leading
+        Appearance.Width = 265.000000000000000000
+        Appearance.Height = 40.000000000000000000
+        Appearance.PlaceOffset.X = 70.000000000000000000
+      end
+      item
+        AppearanceObjectName = 'Delete'
+        AppearanceClassName = 'TTextButtonObjectAppearance'
+        Appearance.TintColor = claOrange
+        Appearance.PressedTextColor = claYellowgreen
+        Appearance.Width = 50.000000000000000000
+        Appearance.Height = 25.000000000000000000
+        Appearance.Align = Trailing
+        Appearance.VertAlign = Center
+        Appearance.PlaceOffset.X = -2.000000000000000000
+        Appearance.Text = 'Delete'
+      end>
+    ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
+      item
+        AppearanceObjectName = 'Text1'
+        AppearanceClassName = 'TTextObjectAppearance'
+      end>
+    CanSwipeDelete = False
+  end
+  object Edit1: TEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    TabOrder = 13
+    Position.X = 120.000000000000000000
+    Position.Y = 8.000000000000000000
+  end
+  object Edit2: TEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    TabOrder = 12
+    Position.X = 228.000000000000000000
+    Position.Y = 8.000000000000000000
+    Size.Width = 285.000000000000000000
+    Size.Height = 22.000000000000000000
+    Size.PlatformDefault = False
+  end
+  object Button2: TButton
+    Position.X = 521.000000000000000000
+    Position.Y = 8.000000000000000000
+    TabOrder = 14
+    Text = 'Add'
+    OnClick = Button2Click
+  end
+end

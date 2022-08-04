@@ -2,8 +2,8 @@ object Form1: TForm1
   Left = 0
   Top = 0
   Caption = 'S'
-  ClientHeight = 528
-  ClientWidth = 640
+  ClientHeight = 603
+  ClientWidth = 805
   Padding.Left = 20.000000000000000000
   Padding.Top = 20.000000000000000000
   Padding.Right = 20.000000000000000000
@@ -18,12 +18,12 @@ object Form1: TForm1
     Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
     DataDetectorTypes = []
     Align = Client
-    Size.Width = 600.000000000000000000
-    Size.Height = 149.000000000000000000
+    Size.Width = 765.000000000000000000
+    Size.Height = 75.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 0
-    Viewport.Width = 596.000000000000000000
-    Viewport.Height = 145.000000000000000000
+    Viewport.Width = 761.000000000000000000
+    Viewport.Height = 71.000000000000000000
   end
   object GroupBox1: TGroupBox
     Align = Top
@@ -34,7 +34,7 @@ object Form1: TForm1
     Margins.Bottom = 10.000000000000000000
     Position.X = 20.000000000000000000
     Position.Y = 157.000000000000000000
-    Size.Width = 600.000000000000000000
+    Size.Width = 765.000000000000000000
     Size.Height = 192.000000000000000000
     Size.PlatformDefault = False
     Text = 'Contacts'
@@ -46,7 +46,7 @@ object Form1: TForm1
       FooterAppearanceClassName = 'TCustomizeItemObjects'
       AlternatingColors = True
       Align = Client
-      Size.Width = 594.000000000000000000
+      Size.Width = 759.000000000000000000
       Size.Height = 116.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 11
@@ -92,7 +92,7 @@ object Form1: TForm1
       Align = Top
       Position.X = 3.000000000000000000
       Position.Y = 30.000000000000000000
-      Size.Width = 594.000000000000000000
+      Size.Width = 759.000000000000000000
       Size.Height = 43.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 38
@@ -127,7 +127,7 @@ object Form1: TForm1
     Align = Top
     Position.X = 20.000000000000000000
     Position.Y = 20.000000000000000000
-    Size.Width = 600.000000000000000000
+    Size.Width = 765.000000000000000000
     Size.Height = 137.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 4
@@ -194,5 +194,65 @@ object Form1: TForm1
       Position.X = 493.000000000000000000
       Position.Y = 48.000000000000000000
     end
+    object Button4: TButton
+      Position.X = 176.000000000000000000
+      Size.Width = 161.000000000000000000
+      Size.Height = 40.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 9
+      Text = 'SeparatedBindList'
+      OnClick = Button4Click
+    end
+  end
+  object ListView2: TListView
+    ItemAppearanceClassName = 'TDynamicAppearance'
+    ItemEditAppearanceClassName = 'TDynamicAppearance'
+    HeaderAppearanceClassName = 'TCustomizeItemObjects'
+    FooterAppearanceClassName = 'TCustomizeItemObjects'
+    AlternatingColors = True
+    Align = Top
+    Position.X = 20.000000000000000000
+    Position.Y = 359.000000000000000000
+    Size.Width = 765.000000000000000000
+    Size.Height = 149.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 10
+    ItemAppearance.ItemHeight = 35
+    ItemAppearance.HeaderHeight = 1
+    ItemAppearance.FooterHeight = 1
+    ItemAppearanceObjects.ItemObjects.ObjectsCollection = <
+      item
+        AppearanceObjectName = 'ID'
+        AppearanceClassName = 'TTextObjectAppearance'
+        Appearance.Width = 63.000000000000000000
+        Appearance.Height = 44.000000000000000000
+      end
+      item
+        AppearanceObjectName = 'Description'
+        AppearanceClassName = 'TTextObjectAppearance'
+        Appearance.TextAlign = Leading
+        Appearance.Width = 265.000000000000000000
+        Appearance.Height = 40.000000000000000000
+        Appearance.PlaceOffset.X = 70.000000000000000000
+      end
+      item
+        AppearanceObjectName = 'Delete'
+        AppearanceClassName = 'TTextButtonObjectAppearance'
+        Appearance.TintColor = claOrange
+        Appearance.PressedTextColor = claYellowgreen
+        Appearance.Width = 50.000000000000000000
+        Appearance.Height = 25.000000000000000000
+        Appearance.Align = Trailing
+        Appearance.VertAlign = Center
+        Appearance.PlaceOffset.X = -2.000000000000000000
+        Appearance.Text = 'Delete'
+      end>
+    ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
+      item
+        AppearanceObjectName = 'Text1'
+        AppearanceClassName = 'TTextObjectAppearance'
+      end>
+    CanSwipeDelete = False
+    OnItemClickEx = ListView1ItemClickEx
   end
 end

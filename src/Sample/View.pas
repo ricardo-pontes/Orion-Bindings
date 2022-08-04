@@ -10,6 +10,7 @@ uses
   System.Variants,
   System.JSON,
   System.JSON.Writers,
+  System.Generics.Collections,
   Rest.Json,
 
   FMX.Types,
@@ -58,6 +59,8 @@ type
     EditContactDescription: TEdit;
     Button3: TButton;
     Layout2: TLayout;
+    Button4: TButton;
+    ListView2: TListView;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -65,9 +68,11 @@ type
     procedure Button3Click(Sender: TObject);
     procedure ListView1ItemClickEx(const Sender: TObject; ItemIndex: Integer; const LocalClickPos: TPointF;
       const ItemObject: TListItemDrawable);
+    procedure Button4Click(Sender: TObject);
   private
     FCustomer : TCustomer;
     FBinds : iOrionBindings;
+    FSeparatedContacts : TObjectList<TContact>;
     procedure CreateCustomer;
     procedure ConfigOrionBindings;
   public
@@ -78,6 +83,9 @@ var
   Form1: TForm1;
 
 implementation
+
+uses
+  View.SeparatedBindList;
 
 {$R *.fmx}
 
@@ -114,6 +122,11 @@ begin
   lListItem := ListView1.Items.Add;
   TListItemText(lListItem.Objects.FindDrawable('ID')).Text := EditContactID.Text;
   TListItemText(lListItem.Objects.FindDrawable('Description')).Text := EditContactDescription.Text;
+end;
+
+procedure TForm1.Button4Click(Sender: TObject);
+begin
+  ViewSeparatedBindList.Show;
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
@@ -159,6 +172,23 @@ begin
   lContact.ID := 2;
   lContact.Description := 'Test 2';
   FCustomer.Contacts.Add(lContact);
+
+  FSeparatedContacts := TObjectList<TContact>.Create;
+
+  lContact := TContact.Create;
+  lContact.ID := 1;
+  lContact.Description := 'Ricardo Pontes da Cunha';
+  FSeparatedContacts.Add(lContact);
+
+  lContact := TContact.Create;
+  lContact.ID := 2;
+  lContact.Description := 'Gigiva';
+  FSeparatedContacts.Add(lContact);
+
+  lContact := TContact.Create;
+  lContact.ID := 3;
+  lContact.Description := 'Dodô';
+  FSeparatedContacts.Add(lContact);
 end;
 
 procedure TForm1.ConfigOrionBindings;
@@ -175,10 +205,17 @@ begin
   FBinds.AddBind('EditCPFCNPJ', 'Document.Number', [CPF, CNPJ]);
 
   FBinds.ListBinds.Init;
-  FBinds.ListBinds.ComponentName('ListView1');
+  FBinds.ListBinds.ComponentName(ListView1.Name);
   FBinds.ListBinds.ObjectListPropertyName('Contacts');
   FBinds.ListBinds.ClassType(TContact);
   FBinds.ListBinds.Primarykey('ID');
+  FBinds.ListBinds.AddListBind('ID', 'ID');
+  FBinds.ListBinds.AddListBind('Description', 'Description');
+  FBinds.ListBinds.Finish;
+
+  FBinds.ListBinds.Init(True);
+  FBinds.ListBinds.ComponentName(ListView2.Name);
+  FBinds.ListBinds.ObjectList(FSeparatedContacts);
   FBinds.ListBinds.AddListBind('ID', 'ID');
   FBinds.ListBinds.AddListBind('Description', 'Description');
   FBinds.ListBinds.Finish;

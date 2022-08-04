@@ -13,7 +13,7 @@ uses
   Orion.Bindings.Middleware;
 
 const
-  FRAMEWORK_VERSION = '1.0.0';
+  FRAMEWORK_VERSION = '1.1.0';
 
 type
   TOrionBindings = class(TInterfacedObject, iOrionBindings, iOrionBindingsList)
@@ -40,9 +40,10 @@ type
     function BindToView : iOrionBindings;
     function ListBinds : iOrionBindingsList;
 
-    procedure Init;
+    procedure Init(aIsSeparatedOfEntityBindList : boolean = false);
     procedure ComponentName(aValue : string);
     procedure ObjectListPropertyName(aValue : string);
+    procedure ObjectList(aValue : TObject);
     procedure Primarykey(aName : string);
     procedure ClassType(aClassType : TClass);
     procedure AddListBind(aComponentName, aObjectPropertyName : string); overload;
@@ -138,6 +139,11 @@ begin
   Result := Self.Create;
 end;
 
+procedure TOrionBindings.ObjectList(aValue: TObject);
+begin
+  FDataListBind.ObjectList := aValue;
+end;
+
 procedure TOrionBindings.ObjectListPropertyName(aValue: string);
 begin
   FDataListBind.ObjectListName(aValue);
@@ -154,9 +160,10 @@ begin
   FDataListBinds.AddDataListBind(FDataListBind);
 end;
 
-procedure TOrionBindings.Init;
+procedure TOrionBindings.Init(aIsSeparatedOfEntityBindList : boolean = false);
 begin
   FDataListBind := TOrionBindingsDataListBind.Create;
+  FDataListBind.IsSeparatedOfEntityBindList := aIsSeparatedOfEntityBindList;
 end;
 
 function TOrionBindings.ListBinds: iOrionBindingsList;

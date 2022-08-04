@@ -9,6 +9,9 @@ uses
   Orion.Bindings.Middleware;
 
 type
+  {$SCOPEDENUMS ON}
+  TDataListBindType = (Entity, SeparatedOfEntity);
+  {$SCOPEDENUMS OFF}
   TOrionBindingsData = class
   private
     FBinds : TList<TOrionBind>;
@@ -30,11 +33,14 @@ type
     FObjectListPropertyName : string;
     FPrimaryKeyName : string;
     FClassType : TClass;
+    FIsSeparatedOfEntityBindList: boolean;
+  private
+    FObjectList: TObject;
   public
     constructor Create;
     destructor Destroy; override;
 
-    procedure Validate;
+    procedure Validate(aDataListBindType : TDataListBindType = TDataListBindType.Entity);
     procedure ComponentName(aValue : string); overload;
     function ComponentName : string; overload;
     procedure PrimaryKeyName(aValue : string); overload;
@@ -45,6 +51,8 @@ type
     function ClassType : TClass; overload;
     procedure AddBind(aComponentName, aObjectPropertyName : string; aMiddlewares : array of OrionBindingsMiddleware);
     function Binds : TList<TOrionBind>;
+    property IsSeparatedOfEntityBindList: boolean read FIsSeparatedOfEntityBindList write FIsSeparatedOfEntityBindList;
+    property ObjectList: TObject read FObjectList write FObjectList;
   end;
 
   TOrionBindingsDataListBinds = class
@@ -56,6 +64,7 @@ type
     procedure AddDataListBind(aValue : TOrionBindingsDataListBind);
     function Count : integer;
     function Binds : TObjectList<TOrionBindingsDataListBind>;
+    function ContainsSeparatedofEntityListBind : boolean;
   end;
 
   TOrionBindingsList<T:class> = class
@@ -215,19 +224,25 @@ begin
   Result := FPrimaryKeyName;
 end;
 
-procedure TOrionBindingsDataListBind.Validate;
+procedure TOrionBindingsDataListBind.Validate(aDataListBindType : TDataListBindType = TDataListBindType.Entity);
 begin
   if FComponentName = '' then
     raise OrionBindingsException.Create('ListBind: ComponentName is null.');
 
-  if FObjectListPropertyName = '' then
-    raise OrionBindingsException.Create('ListBind: ObjectListPropertyName is null.');
-
-  if FPrimaryKeyName = '' then
-    raise OrionBindingsException.Create('ListBind: PrimaryKeyName is null.');
-
   if FListBinds.Count = 0 then
     raise OrionBindingsException.Create('ListBind: No one bind setted.');
+
+  if aDataListBindType = TDataListBindType.Entity then begin
+    if FObjectListPropertyName = '' then
+      raise OrionBindingsException.Create('ListBind: ObjectListPropertyName is null.');
+
+    if FPrimaryKeyName = '' then
+      raise OrionBindingsException.Create('ListBind: PrimaryKeyName is null.');
+  end
+  else if aDataListBindType = TDataListBindType.SeparatedOfEntity then begin
+    if not Assigned(FObjectList) then
+      raise OrionBindingsException.Create('ListBind: ObjectList is null');
+  end;
 end;
 
 procedure TOrionBindingsDataListBind.PrimaryKeyName(aValue: string);
@@ -250,6 +265,20 @@ end;
 function TOrionBindingsDataListBinds.Binds: TObjectList<TOrionBindingsDataListBind>;
 begin
   Result := FListBinds;
+end;
+
+function TOrionBindingsDataListBinds.ContainsSeparatedofEntityListBind: boolean;
+var
+  lListBind: TOrionBindingsDataListBind;
+begin
+  Result := False;
+  for lListBind in FListBinds do begin
+    if not lListBind.IsSeparatedOfEntityBindList then
+      Continue;
+
+    Result := True;
+    Break;
+  end;
 end;
 
 function TOrionBindingsDataListBinds.Count: integer;
