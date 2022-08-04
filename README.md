@@ -82,7 +82,7 @@ FBinds.ListBinds.Finish;
 No Exemplo acima, no Objeto Customer existe uma property chamada "Contacts" que é um TObjectList<TContact>;
 Todos os parâmetros são obrigatórios para a execução dos binds e você não precisa se preocupar com o estado dos objetos, o próprio framework se encarregará do sincronismo entre o formulário de dados e a coleção, ficando responsável pelas alterações, inserções e exclusões.
 
-Também é possível fazer bind apenas com coleção de objetos
+Também é possível fazer bind apenas com coleção de objetos que estão separadas da entidade principal.
  
 ```
 FBinds.ListBinds.Init(True); //True é para informar que o objeto é um bind separado da entidade principal
