@@ -40,6 +40,7 @@ contains
   Orion.Bindings in 'Orion.Bindings.pas',
   Orion.Bindings.Types in 'Orion.Bindings.Types.pas',
   Orion.Bindings.Rtti in 'Orion.Bindings.Rtti.pas',
-  Orion.Bindings.Middleware in 'Orion.Bindings.Middleware.pas';
+  Orion.Bindings.Middleware in 'Orion.Bindings.Middleware.pas',
+  Orion.Bindings.Core.UniqueBindList in 'Orion.Bindings.Core.UniqueBindList.pas';
 
 end.

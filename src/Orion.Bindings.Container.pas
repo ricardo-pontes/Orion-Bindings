@@ -3,7 +3,8 @@ unit Orion.Bindings.Container;
 interface
 
 uses
-  System.Classes;
+  System.Classes,
+  System.SysUtils;
 
 type
   TOrionBindingsContainer = class
@@ -15,6 +16,7 @@ type
     function View : TComponent; overload;
     procedure Entity(aEntity : TObject); overload;
     function Entity : TObject; overload;
+    function isObjectList : boolean;
   end;
 
 implementation
@@ -29,6 +31,11 @@ end;
 function TOrionBindingsContainer.Entity: TObject;
 begin
   Result := FEntity;
+end;
+
+function TOrionBindingsContainer.isObjectList: boolean;
+begin
+  Result := FEntity.ClassName.Contains('TObjectList<');
 end;
 
 procedure TOrionBindingsContainer.View(aView: TComponent);

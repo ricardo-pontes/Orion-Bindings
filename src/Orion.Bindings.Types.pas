@@ -36,9 +36,16 @@ type
   end;
 
   OrionBindingsException = class(Exception)
-
+    constructor Create(aMessage : string);
   end;
 
 implementation
+
+{ OrionBindingsException }
+
+constructor OrionBindingsException.Create(aMessage: string);
+begin
+  message := Format('OrionBindings Exception - %s', [aMessage]);
+end;
 
 end.

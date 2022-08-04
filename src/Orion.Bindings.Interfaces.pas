@@ -27,9 +27,10 @@ type
   end;
 
   iOrionBindingsList = interface
-    procedure Init;
+    procedure Init(aIsSeparatedOfEntityBindList : boolean = false);
     procedure ComponentName(aValue : string);
     procedure ObjectListPropertyName(aValue : string);
+    procedure ObjectList(aValue : TObject);
     procedure Primarykey(aName : string);
     procedure ClassType(aClassType : TClass);
     procedure AddListBind(aComponentName, aObjectPropertyName : string); overload;

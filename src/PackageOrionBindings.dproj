@@ -115,6 +115,7 @@
         <DCCReference Include="Orion.Bindings.Types.pas"/>
         <DCCReference Include="Orion.Bindings.Rtti.pas"/>
         <DCCReference Include="Orion.Bindings.Middleware.pas"/>
+        <DCCReference Include="Orion.Bindings.Core.UniqueBindList.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

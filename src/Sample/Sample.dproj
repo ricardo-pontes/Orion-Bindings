@@ -261,6 +261,10 @@
             <FormType>fmx</FormType>
         </DCCReference>
         <DCCReference Include="Customer.pas"/>
+        <DCCReference Include="View.SeparatedBindList.pas">
+            <Form>ViewSeparatedBindList</Form>
+            <FormType>fmx</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
