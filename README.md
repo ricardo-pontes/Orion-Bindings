@@ -83,14 +83,15 @@ No Exemplo acima, no Objeto Customer existe uma property chamada "Contacts" que 
 Todos os parâmetros são obrigatórios para a execução dos binds e você não precisa se preocupar com o estado dos objetos, o próprio framework se encarregará do sincronismo entre o formulário de dados e a coleção, ficando responsável pelas alterações, inserções e exclusões.
 
 Também é possível fazer bind apenas com coleção de objetos
-
+ 
+```
 FBinds.ListBinds.Init(True); //True é para informar que o objeto é um bind separado da entidade principal
 FBinds.ListBinds.ComponentName('ListView1');
 FBinds.ListBinds.ObjectList(FSeparatedContacts);
 FBinds.ListBinds.AddListBind('ID', 'ID');
 FBinds.ListBinds.AddListBind('Description', 'Description');
 FBinds.ListBinds.Finish;
-
+```
 ## Middlewares nos Binds
 
 O framework conta com o conceito de middlewares nos binds, no qual serão executados antes do bind acontecer, tendo assim a capacidade de interceptar o valor caso seja um BindToView ou um BindToEntity e dando a flexibilidade para que qualquer pessoa possa escrever o seu próprio middleware, de acordo com a sua necessidade.
