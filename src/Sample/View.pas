@@ -39,7 +39,7 @@ uses
   Orion.Bindings.Middleware.CPF,
   Orion.Bindings.Middleware.CNPJ,
   Orion.Bindings.Middleware.FormatCurrency,
-  Orion.Bindings.Middleware.ZeroIfEmptyStr;
+  Orion.Bindings.Middleware.ZeroIfEmptyStr, FMX.Objects;
 
 type
   TForm1 = class(TForm)
@@ -61,6 +61,7 @@ type
     Layout2: TLayout;
     Button4: TButton;
     ListView2: TListView;
+    Image1: TImage;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -211,6 +212,7 @@ begin
   FBinds.ListBinds.Primarykey('ID');
   FBinds.ListBinds.AddListBind('ID', 'ID');
   FBinds.ListBinds.AddListBind('Description', 'Description');
+  FBinds.ListBinds.AddListBind('btnEditar', Image1.Bitmap);
   FBinds.ListBinds.Finish;
 
   FBinds.ListBinds.Init(True);

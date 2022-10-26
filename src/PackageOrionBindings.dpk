@@ -29,7 +29,8 @@ package PackageOrionBindings;
 
 requires
   rtl,
-  fmx;
+  fmx,
+  vcl;
 
 contains
   Orion.Bindings.Interfaces in 'Orion.Bindings.Interfaces.pas',
@@ -40,7 +41,6 @@ contains
   Orion.Bindings in 'Orion.Bindings.pas',
   Orion.Bindings.Types in 'Orion.Bindings.Types.pas',
   Orion.Bindings.Rtti in 'Orion.Bindings.Rtti.pas',
-  Orion.Bindings.Middleware in 'Orion.Bindings.Middleware.pas',
-  Orion.Bindings.Core.UniqueBindList in 'Orion.Bindings.Core.UniqueBindList.pas';
+  Orion.Bindings.Middleware in 'Orion.Bindings.Middleware.pas';
 
 end.

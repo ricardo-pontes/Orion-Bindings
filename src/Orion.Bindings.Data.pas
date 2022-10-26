@@ -6,7 +6,13 @@ uses
   System.Generics.Collections,
   System.SysUtils,
   Orion.Bindings.Types,
-  Orion.Bindings.Middleware;
+  Orion.Bindings.Middleware
+{$IF DECLARED(FireMonkeyVersion)}
+  , FMX.Graphics
+{$ELSE}
+  , VCL.Graphics
+{$IFEND}
+  ;
 
 type
   {$SCOPEDENUMS ON}
@@ -33,6 +39,7 @@ type
     FObjectListPropertyName : string;
     FPrimaryKeyName : string;
     FClassType : TClass;
+    FBitmap : TBitmap;
     FIsSeparatedOfEntityBindList: boolean;
   private
     FObjectList: TObject;
@@ -49,7 +56,8 @@ type
     function ObjectListName : string; overload;
     procedure ClassType(aValue : TClass); overload;
     function ClassType : TClass; overload;
-    procedure AddBind(aComponentName, aObjectPropertyName : string; aMiddlewares : array of OrionBindingsMiddleware);
+    property Bitmap: TBitmap read FBitmap write FBitmap;
+    procedure AddBind(aComponentName, aObjectPropertyName : string; aMiddlewares : array of OrionBindingsMiddleware; aBitmap : TBitmap);
     function Binds : TList<TOrionBind>;
     property IsSeparatedOfEntityBindList: boolean read FIsSeparatedOfEntityBindList write FIsSeparatedOfEntityBindList;
     property ObjectList: TObject read FObjectList write FObjectList;
@@ -167,13 +175,13 @@ end;
 
 { TOrionBindingsDataListBind }
 
-procedure TOrionBindingsDataListBind.AddBind(aComponentName, aObjectPropertyName: string;
-  aMiddlewares: array of OrionBindingsMiddleware);
+procedure TOrionBindingsDataListBind.AddBind(aComponentName, aObjectPropertyName : string; aMiddlewares : array of OrionBindingsMiddleware; aBitmap : TBitmap);
 var
   lOrionBind : TOrionBind;
 begin
   lOrionBind.ComponentName := aComponentName;
   lOrionBind.ObjectPropertyName := aObjectPropertyName;
+  lOrionBind.Bitmap := aBitmap;
   SetMiddlewares(lOrionBind, aMiddlewares);
   FListBinds.Add(lOrionBind);
 end;

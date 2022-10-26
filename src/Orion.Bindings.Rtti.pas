@@ -60,7 +60,7 @@ begin
     tkWString: aProperty.SetValue(Pointer(aEntity), aValue.AsString);
     tkUString: aProperty.SetValue(Pointer(aEntity), aValue.AsString);
     tkUnknown: raise OrionBindingsException.Create(Format('Type %s not supported.', ['tkUnknown']));
-    tkEnumeration: raise OrionBindingsException.Create(Format('Type %s not supported.', ['tkEnumeration']));
+    tkEnumeration: aProperty.SetValue(Pointer(aEntity), aValue.AsBoolean);
     tkSet: raise OrionBindingsException.Create(Format('Type %s not supported.', ['tkSet']));
     tkClass: raise OrionBindingsException.Create(Format('Type %s not supported.', ['tkClass']));
     tkMethod: raise OrionBindingsException.Create(Format('Type %s not supported.', ['tkMethod']));

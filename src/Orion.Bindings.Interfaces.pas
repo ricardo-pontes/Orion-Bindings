@@ -1,17 +1,19 @@
 unit Orion.Bindings.Interfaces;
-
 interface
-
 uses
   System.Classes,
   System.Rtti,
   Orion.Bindings.Types,
-  Orion.Bindings.Middleware;
-
+  Orion.Bindings.Middleware
+{$IF DECLARED(FireMonkeyVersion)}
+  , FMX.Graphics
+{$ELSE}
+  , VCL.Graphics
+{$IFEND}
+  ;
 type
   iOrionVisualFramework = interface;
   iOrionBindingsList = interface;
-
   iOrionBindings = interface
     function Use(aLibrary : iOrionVisualFramework) : iOrionBindings;
     function View(aView : TComponent) : iOrionBindings;
@@ -25,7 +27,6 @@ type
     function ListBinds : iOrionBindingsList;
     function Version : string;
   end;
-
   iOrionBindingsList = interface
     procedure Init(aIsSeparatedOfEntityBindList : boolean = false);
     procedure ComponentName(aValue : string);
@@ -34,14 +35,12 @@ type
     procedure Primarykey(aName : string);
     procedure ClassType(aClassType : TClass);
     procedure AddListBind(aComponentName, aObjectPropertyName : string); overload;
+    procedure AddListBind(aComponentName : string; aImage : TObject); overload;
     procedure AddListBind(aComponentName, aObjectPropertyName : string; aMiddlewares : array of OrionBindingsMiddleware); overload;
     procedure Finish;
   end;
-
   iOrionVisualFramework = interface
     procedure Synchronize(aCommand : TOrionMiddlewareCommand; aComponent : TComponent; var aValue : TValue);
   end;
-
 implementation
-
 end.

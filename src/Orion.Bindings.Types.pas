@@ -5,7 +5,13 @@ interface
 uses
   Orion.Bindings.Middleware,
   System.Rtti,
-  System.SysUtils;
+  System.SysUtils
+{$IF DECLARED(FireMonkeyVersion)}
+  , FMX.Graphics
+{$ELSE}
+  , VCL.Graphics
+{$IFEND}
+  ;
 
 type
   {$SCOPEDENUMS ON}
@@ -22,6 +28,7 @@ type
     ObjectPropertyNameOut : string;
     RemoveSimbolsIn : boolean;
     Middlewares : array of OrionBindingsMiddleware;
+    Bitmap : TBitmap;
   end;
 
   TOrionBindSyncList = class
