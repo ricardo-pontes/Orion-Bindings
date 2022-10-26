@@ -79,6 +79,9 @@ begin
       if lListBind.IsSeparatedOfEntityBindList then
         Continue;
 
+      if Assigned(lListBind.Bitmap) then
+        Continue;
+
       if Assigned(lSynkedEntityList) then
         lSynkedEntityList.DisposeOf;
 
@@ -153,12 +156,18 @@ begin
     for lObject in lObjectList do begin
       Synchronize(TOrionMiddlewareCommand.BindToViewListBindAddRow, lComponent, lValue);
       for lBind in lListBind.Binds do begin
-        lResultProperty := GetEntityPropertyByName(lBind.ObjectPropertyName, lObject);
+        if not lBind.ObjectPropertyName.IsEmpty then
+          lResultProperty := GetEntityPropertyByName(lBind.ObjectPropertyName, lObject);
         lListValue := TorionBindSyncList.Create;
         try
           lListValue.Index := lIndex;
           lListValue.ComponentName := lBind.ComponentName;
-          lListValue.Value := lResultProperty.&Property.GetValue(Pointer(lObject));
+
+          if not lBind.ObjectPropertyName.IsEmpty then
+            lListValue.Value := lResultProperty.&Property.GetValue(Pointer(lObject))
+          else
+            lListValue.Value := lBind.Bitmap;
+
           ExecuteMiddlewares(lValue, lBind, OrionBindingsMiddlewareState.BindToView);
           lValue := lListValue;
           Synchronize(TOrionMiddlewareCommand.ListBindUpdateValue, lComponent, lValue);
@@ -200,6 +209,9 @@ begin
     if lListBind.IsSeparatedOfEntityBindList then
       lListBind.Validate(TDataListBindType.SeparatedOfEntity)
     else begin
+      if Assigned(lListBind.Bitmap) then
+        Continue;
+
       CheckIfObjectPropertyNameExist(lListBind.ObjectListName);
       lListBind.Validate;
     end;
@@ -222,6 +234,9 @@ begin
       aValue := lListValue;
       Synchronize(TOrionMiddlewareCommand.ListBindGetValue, aComponent, aValue);
       ExecuteMiddlewares(TOrionBindSyncList(aValue.AsObject).Value, lBind, OrionBindingsMiddlewareState.BindToEntity);
+      if lBind.ObjectPropertyName.IsEmpty then
+        Continue;
+
       lResultProperty := GetEntityPropertyByName(lBind.ObjectPropertyName, aObject);
       if (lResultProperty.&Property.Name = aListBind.PrimaryKeyName) and not IsInListSynkEntityIndex(aListSynkEntityIndex, lResultProperty.&Property.GetValue(Pointer(aObject))) then begin
         lValue := aNegativeCount;
