@@ -121,8 +121,8 @@ begin
         Result.Entity := aEntity;
     end;
   finally
-    if not IsCompound then
-      lType.DisposeOf;
+//    if not IsCompound then
+//      lType.DisposeOf;
   end;
 end;
 
