@@ -20,7 +20,7 @@ begin
     aValue := lValue;
   end
   else if aState = OrionBindingsMiddlewareState.BindToEntity then begin
-    lValue := aValue.AsString.Replace('R$', '', [rfReplaceAll]).Replace(' ', '', [rfReplaceAll]).Replace('.', '', [rfReplaceAll]);
+    lValue := aValue.ToString.Replace('R$', '', [rfReplaceAll]).Replace(' ', '', [rfReplaceAll]).Replace('.', '', [rfReplaceAll]);
     aValue := lValue;
   end;
 end;
