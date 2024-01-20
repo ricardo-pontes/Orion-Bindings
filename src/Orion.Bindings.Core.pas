@@ -168,7 +168,7 @@ begin
           else
             lListValue.Value := lBind.Bitmap;
 
-          ExecuteMiddlewares(lValue, lBind, OrionBindingsMiddlewareState.BindToView);
+          ExecuteMiddlewares(lListValue.Value, lBind, OrionBindingsMiddlewareState.BindToView);
           lValue := lListValue;
           Synchronize(TOrionMiddlewareCommand.ListBindUpdateValue, lComponent, lValue);
         finally
