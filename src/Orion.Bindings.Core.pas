@@ -164,7 +164,7 @@ begin
           lListValue.ComponentName := lBind.ComponentName;
 
           if not lBind.ObjectPropertyName.IsEmpty then
-            lListValue.Value := lResultProperty.&Property.GetValue(Pointer(lObject))
+            lListValue.Value := lResultProperty.&Property.GetValue(Pointer(lResultProperty.Entity))
           else
             lListValue.Value := lBind.Bitmap;
 
